@@ -1157,6 +1157,7 @@ UnitList* SaturationAlgorithm::collectSaturatedSet()
 void SaturationAlgorithm::doOneAlgorithmStep()
 {
   CALL("SaturationAlgorithm::doOneAlgorithmStep");
+  RSTAT_CTR_INC("iterations of the main saturation loop");
 
   doUnprocessedLoop();
 
