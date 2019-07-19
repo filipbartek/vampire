@@ -613,6 +613,13 @@ struct PredRevArityComparator
   }
 };
 
+/**
+ * Loads a permutation of unsigned integers from a string.
+ * The integers are expected to be separated by whitespace sequences
+ * with optional leading commas.
+ * The output array p is expected to be sufficiently long.
+ * The input integers are expected to have values smaller than p.size().
+ */
 static void loadPermutationFromString(DArray<unsigned>& p, const vstring& str) {
   CALL("loadPermutationFromString");
 
