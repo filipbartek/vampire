@@ -81,7 +81,7 @@ XFLAGS = -Wfatal-errors -g -DVDEBUG=1 -DCHECK_LEAKS=0 -DGNUMP=$(GNUMPF)# standar
 #XFLAGS = -O6 -DVDEBUG=0 -DUSE_SYSTEM_ALLOCATION=1 -DEFENCE=1 -g -lefence #Electric Fence
 #XFLAGS = -O6 -DVDEBUG=0 -DUSE_SYSTEM_ALLOCATION=1 -g
 
-INCLUDES= -I.
+INCLUDES= -I. -isystem rapidjson/include
 Z3FLAG= -DVZ3=0
 Z3LIB=
 ifeq (,$(shell echo $(MAKECMDGOALS) | sed 's/.*z3.*//g')) 
