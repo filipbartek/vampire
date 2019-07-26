@@ -174,15 +174,15 @@ class Signature
     inline void resetUnitUsageCnt(){ _unitUsageCount=0;}
 
     inline void markInGoal(){ _inGoal=1; }
-    inline bool inGoal(){ return _inGoal; }
+    inline bool inGoal() const { return _inGoal; }
     inline void markInUnit(){ _inUnit=1; }
-    inline bool inUnit(){ return _inUnit; }
+    inline bool inUnit() const { return _inUnit; }
 
     inline void markSkolem(){ _skolem = 1;}
-    inline bool skolem(){ return _skolem; }
+    inline bool skolem() const { return _skolem; }
 
     inline void markInductionSkolem(){ _inductionSkolem=1; _skolem=1;}
-    inline bool inductionSkolem(){ return _inductionSkolem;}
+    inline bool inductionSkolem() const { return _inductionSkolem;}
       
     /** Return true if symbol is an integer constant */
     inline bool integerConstant() const
