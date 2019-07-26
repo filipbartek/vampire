@@ -394,6 +394,40 @@ vstring Term::variableToString(TermList var)
   }
 } // variableToString
 
+void Term::write(json::Writer& writer) const
+{
+  writer.StartObject();
+  writer.Key("type");
+  if (isLiteral())
+  {
+    writer.String("predicate");
+  }
+  else
+  {
+    writer.String("function");
+  }
+  writer.Key("id");
+  writer.Uint(functor());
+  writer.Key("name");
+  writer.String(name().c_str());
+  writer.Key("arity");
+  writer.Uint(arity());
+  writer.Key("ground");
+  writer.Bool(ground());
+  writer.Key("isShallow");
+  writer.Bool(isShallow());
+  writer.Key("commutative");
+  writer.Bool(commutative());
+  writer.Key("vars");
+  writer.Uint(vars());
+  // TODO: Write incident functors and variables. See Term::freeVariables(), Term::getVariableIterator(), Term::getDistinctVars()
+  writer.Key("hash");
+  writer.Uint(hash());
+  writer.Key("args");
+  args()->write(writer);
+  writer.EndObject();
+}
+
 /**
  * Return the vstring representation of the terms "head"
  * i.e., the function / predicate symbol name or the special term head.
@@ -560,6 +594,40 @@ vstring TermList::toString() const
   return term()->toString();
 } // TermList::toString
 
+void TermList::write(json::Writer& writer) const
+{
+  // Inspiration: TermList::asArgsToString()
+  writer.StartArray();
+  for (const TermList* ts = this; !ts->isEmpty(); ts = ts->next())
+  {
+    if (ts->isVar()) {
+      ts->writeAsVar(writer);
+      continue;
+    }
+    ASS(ts->isTerm());
+    const Term* t = ts->term();
+    t->write(writer);
+  }
+  writer.EndArray();
+}
+
+void TermList::writeAsVar(json::Writer& writer) const
+{
+  ASS(isVar());
+  writer.StartObject();
+  writer.Key("type");
+  writer.String("variable");
+  writer.Key("id");
+  writer.Uint(var());
+  writer.Key("name");
+  writer.String(Term::variableToString(*this).c_str());
+  writer.Key("ordinary");
+  writer.Bool(isOrdinaryVar());
+  writer.Key("special");
+  writer.Bool(isSpecialVar());
+  writer.EndObject();
+}
+
 
 /**
  * Return the result of conversion of a term into a vstring.
@@ -617,6 +685,23 @@ vstring Literal::toString() const
   }
   return s;
 } // Literal::toString
+
+void Literal::write(json::Writer& writer) const
+{
+  // Inspiration: Literal::toString()
+  writer.StartObject();
+  writer.Key("polarity");
+  writer.Int(polarity());
+  writer.Key("isEquality");
+  writer.Bool(isEquality());
+  writer.Key("hash");
+  writer.Uint(hash());
+  writer.Key("oppositeHash");
+  writer.Uint(oppositeHash());
+  writer.Key("term");
+  Term::write(writer);
+  writer.EndObject();
+}
 
 
 /**

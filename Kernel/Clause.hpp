@@ -33,6 +33,7 @@
 #include "Lib/Allocator.hpp"
 #include "Lib/Event.hpp"
 #include "Lib/InverseLookup.hpp"
+#include "Lib/json.hpp"
 #include "Lib/Metaiterators.hpp"
 #include "Lib/Reflection.hpp"
 #include "Lib/Stack.hpp"
@@ -342,6 +343,8 @@ public:
   void collectVars(DHSet<unsigned>& acc);
   unsigned varCnt();
   unsigned maxVar(); // useful to create fresh variables w.r.t. the clause
+
+  void write(json::Writer& writer) const;
 
 protected:
   /** number of literals */

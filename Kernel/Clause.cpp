@@ -687,6 +687,25 @@ unsigned Clause::maxVar()
   return max;
 }
 
+void Clause::write(json::Writer& writer) const
+{
+  writer.StartObject();
+  // Inspiration: TPTPPrinter::toString(const Unit* unit)
+  writer.Key("inputType");
+  writer.String(inputTypeAsString().c_str());
+  writer.Key("inputTypeId");
+  writer.Int(inputType());
+  // Inspiration: Clause::toTPTPString()
+  writer.Key("literals");
+  writer.StartArray();
+  for (unsigned i = 0; i < length(); ++i) {
+    const Literal * const literal = (*this)[i];
+    literal->write(writer);
+  }
+  writer.EndArray();
+  writer.EndObject();
+}
+
 /**
  * Return index of @b lit in the clause
  *

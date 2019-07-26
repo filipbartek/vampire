@@ -42,6 +42,7 @@
 #include "Lib/Stack.hpp"
 #include "Lib/Metaiterators.hpp"
 #include "Lib/VString.hpp"
+#include "Lib/json.hpp"
 
 // #include "MatchTag.hpp" // MS: disconnecting MatchTag, January 2017
 #define USE_MATCH_TAG 0
@@ -131,6 +132,8 @@ public:
   /** return the content, useful for e.g., term argument comparison */
   inline size_t content() const { return _content; }
   vstring toString() const;
+  void write(json::Writer& writer) const;
+  void writeAsVar(json::Writer& writer) const;
   /** make the term into an ordinary variable with a given number */
   inline void makeVar(unsigned vnumber)
   { _content = vnumber * 4 + ORD_VAR; }
@@ -333,6 +336,7 @@ public:
   vstring toString() const;
   static vstring variableToString(unsigned var);
   static vstring variableToString(TermList var);
+  void write(json::Writer& writer) const;
   /** return the arguments */
   const TermList* args() const
   { return _args + _arity; }
@@ -859,6 +863,7 @@ public:
 
 //   XMLElement toXML() const;
   vstring toString() const;
+  void write(json::Writer& writer) const;
   const vstring& predicateName() const;
 
 private:
