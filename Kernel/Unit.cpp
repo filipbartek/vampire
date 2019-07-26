@@ -264,6 +264,30 @@ vstring Unit::toString() const
   }
 }
 
+vstring Unit::inputTypeAsString() const
+{
+  // Inspiration: TPTPPrinter::toString(const Unit* unit)
+  vstring kind;
+  switch (inputType()) {
+  case ASSUMPTION:
+    kind = "hypothesis";
+    break;
+  case CONJECTURE:
+    kind = "negated_conjecture";
+    break;
+  case EXTENSIONALITY_AXIOM:
+    kind = "extensionality";
+    break;
+  case NEGATED_CONJECTURE:
+    kind = "negated_conjecture";
+    break;
+  default:
+    kind = "axiom";
+    break;
+  }
+  return kind;
+}
+
 unsigned Unit::varCnt()
 {
   CALL("Unit::varCnt");

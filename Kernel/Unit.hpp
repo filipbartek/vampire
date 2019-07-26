@@ -79,6 +79,7 @@ public:
 
   void destroy();
   vstring toString() const;
+  vstring inputTypeAsString() const;
   unsigned varCnt();
   unsigned getPriority() const;
 
