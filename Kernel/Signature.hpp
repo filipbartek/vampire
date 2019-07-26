@@ -37,6 +37,7 @@
 #include "Lib/DHMap.hpp"
 #include "Lib/VString.hpp"
 #include "Lib/Environment.hpp"
+#include "Lib/json.hpp"
 
 #include "Shell/TermAlgebra.hpp"
 #include "Shell/Options.hpp"
@@ -217,6 +218,8 @@ class Signature
     void forceType(OperatorType* type);
     OperatorType* fnType() const;
     OperatorType* predType() const;
+
+    void write(json::Writer& writer, unsigned symNumber) const;
 
     CLASS_NAME(Signature::Symbol);
     USE_ALLOCATOR(Symbol);
