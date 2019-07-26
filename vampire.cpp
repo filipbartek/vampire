@@ -45,6 +45,7 @@
 #include "Lib/Vector.hpp"
 #include "Lib/System.hpp"
 #include "Lib/Metaiterators.hpp"
+#include "Lib/json.hpp"
 
 #include "Lib/RCPtr.hpp"
 
@@ -689,6 +690,53 @@ void spiderMode()
   env.endOutput();
 } // spiderMode
 
+static void writeProblem(json::Writer& writer, CompositeISE& simplifier)
+{
+  // Inspiration: clausifyMode(bool theory)
+  writer.StartObject();
+  { // sig
+    // Inspiration: UIHelper::outputSymbolDeclarations(ostream& out)
+    const Signature& sig = *env.signature;
+    { // functions
+      writer.Key("functions");
+      writer.StartArray();
+      for (unsigned i=0; i<sig.functions(); ++i) {
+        const Signature::Symbol* const sym = env.signature->getFunction(i);
+        sym->write(writer, i);
+      }
+      writer.EndArray();
+    }
+    { // predicates
+      writer.Key("predicates");
+      writer.StartArray();
+      for (unsigned i=0; i<sig.predicates(); ++i) {
+        const Signature::Symbol* const sym = env.signature->getPredicate(i);
+        sym->write(writer, i);
+      }
+      writer.EndArray();
+    }
+    // TODO: Write a list of free variables in the clausified formula.
+  }
+  { // clauses
+    // Inspiration: clausifyMode(bool theory)
+    writer.Key("clauses");
+    writer.StartArray();
+    const ScopedPtr<Problem> prb(getPreprocessedProblem());
+    ClauseIterator cit = prb->clauseIterator();
+    while (cit.hasNext()) {
+      Clause* cl = cit.next();
+      // TODO: Does this modify cl in place? Is it safe to do here?
+      cl = simplifier.simplify(cl);
+      if (!cl) {
+        continue;
+      }
+      cl->write(writer);
+    }
+    writer.EndArray();
+  }
+  writer.EndObject();
+}
+
 void clausifyMode(bool theory)
 {
   CALL("clausifyMode()");
@@ -731,6 +779,13 @@ void clausifyMode(bool theory)
   env.endOutput();
 
   if (env.options->latexOutput() != "off") { outputClausesToLaTeX(prb.ptr()); }
+
+  { // writer
+    json::OutputStream osw(cout);
+    BYPASSING_ALLOCATOR;
+    json::Writer writer(osw);
+    writeProblem(writer, simplifier);
+  }
 
   //we have successfully output all clauses, so we'll terminate with zero return value
   vampireReturnValue = VAMP_RESULT_STATUS_SUCCESS;
