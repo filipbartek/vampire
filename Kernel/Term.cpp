@@ -486,8 +486,13 @@ vstring Term::headToString() const
     if (Theory::tuples()->findProjection(functor(), isLiteral(), proj)) {
       return "$proj(" + Int::toString(proj) + ", ";
     }
-    return (isLiteral() ? static_cast<const Literal *>(this)->predicateName() : functionName()) + (arity() ? "(" : "");
+    return name() + (arity() ? "(" : "");
   }
+}
+
+vstring Term::name() const
+{
+  return isLiteral() ? static_cast<const Literal *>(this)->predicateName() : functionName();
 }
 
 /**

@@ -556,6 +556,7 @@ public:
   }
 protected:
   vstring headToString() const;
+  vstring name() const;
 
   unsigned computeDistinctVars() const;
 
