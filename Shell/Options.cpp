@@ -586,7 +586,7 @@ void Options::Options::init()
     _xmlOutput.tag(OptionTag::OUTPUT);
 
     _jsonOutput = StringOptionValue("json_output","","off");
-    _jsonOutput.description="File to put JSON output in. Only implemented in modes clausify and tclausify.";
+    _jsonOutput.description="File to put JSON output in. If 'off' is specified, JSON output is disabled. Only implemented in modes clausify and tclausify.";
     _lookup.insert(&_jsonOutput);
     _jsonOutput.tag(OptionTag::OUTPUT);
     _jsonOutput.setExperimental();
