@@ -790,7 +790,11 @@ void clausifyMode(bool theory)
     if (!fp)
     {
       // https://stackoverflow.com/a/5987685/4054250
-      perror("JSON output error");
+      // https://stackoverflow.com/a/5138903/4054250
+      ostringstream oss;
+      BYPASSING_ALLOCATOR;
+      oss << "JSON output error: " << strerror(errno);
+      throw ios_base::failure(oss.str());
     }
     else
     {
