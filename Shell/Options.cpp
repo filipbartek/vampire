@@ -585,6 +585,11 @@ void Options::Options::init()
     //_lookup.insert(&_xmlOutput);
     _xmlOutput.tag(OptionTag::OUTPUT);
 
+    _jsonOutput = StringOptionValue("json_output","","off");
+    _jsonOutput.description="File to put JSON output in. Only implemented in modes clausify and tclausify.";
+    _lookup.insert(&_jsonOutput);
+    _jsonOutput.tag(OptionTag::OUTPUT);
+
     _latexOutput = StringOptionValue("latex_output","","off");
     _latexOutput.description="File that will contain proof in the LaTeX format.";
     _lookup.insert(&_latexOutput);

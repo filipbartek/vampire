@@ -1,13 +1,13 @@
 #ifndef __json__
 #define __json__
 
-#include "rapidjson/ostreamwrapper.h"
+#include "rapidjson/filewritestream.h"
 #include "rapidjson/prettywriter.h"
 
 namespace json {
 
-using OutputStream = rapidjson::OStreamWrapper;
-using Writer = rapidjson::PrettyWriter<OutputStream>;
+using FileWriteStream = rapidjson::FileWriteStream;
+using Writer = rapidjson::PrettyWriter<FileWriteStream>;
 
 }
 

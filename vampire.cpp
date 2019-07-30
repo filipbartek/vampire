@@ -20,6 +20,8 @@
  * @file vampire.cpp. Implements the top-level procedures of Vampire.
  */
 
+#include <cstdio>
+
 #include <iostream>
 #include <ostream>
 #include <fstream>
@@ -780,11 +782,24 @@ void clausifyMode(bool theory)
 
   if (env.options->latexOutput() != "off") { outputClausesToLaTeX(prb.ptr()); }
 
-  { // writer
-    json::OutputStream osw(cout);
-    BYPASSING_ALLOCATOR;
-    json::Writer writer(osw);
-    writeProblem(writer, simplifier);
+  if (env.options->jsonOutput() != "off")
+  {
+    static const size_t bufferSize = 65536;
+    char buffer[bufferSize];
+    FILE* fp = fopen(env.options->jsonOutput().c_str(), "wb");
+    if (!fp)
+    {
+      // https://stackoverflow.com/a/5987685/4054250
+      perror("JSON output error");
+    }
+    else
+    {
+      json::FileWriteStream os(fp, buffer, bufferSize);
+      BYPASSING_ALLOCATOR;
+      json::Writer writer(os);
+      writeProblem(writer, simplifier);
+      fclose(fp);
+    }
   }
 
   //we have successfully output all clauses, so we'll terminate with zero return value

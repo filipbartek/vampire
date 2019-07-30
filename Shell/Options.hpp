@@ -1985,6 +1985,7 @@ public:
   void setOutputAxiomNames(bool newVal) { _outputAxiomNames.actualValue = newVal; }
   QuestionAnsweringMode questionAnswering() const { return _questionAnswering.actualValue; }
   vstring xmlOutput() const { return _xmlOutput.actualValue; }
+  vstring jsonOutput() const { return _jsonOutput.actualValue; }
   Output outputMode() const { return _outputMode.actualValue; }
   void setOutputMode(Output newVal) { _outputMode.actualValue = newVal; }
   vstring thanks() const { return _thanks.actualValue; }
@@ -2460,6 +2461,7 @@ private:
   IntOptionValue _whileNumber;
 
   StringOptionValue _xmlOutput;
+  StringOptionValue _jsonOutput;
 
   OptionChoiceValues _tagNames;
 
