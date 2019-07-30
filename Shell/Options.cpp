@@ -132,7 +132,7 @@ void Options::Options::init()
     "  -portfolio: a portfolio mode running a specified schedule (see schedule)\n"
     "  -casc, casc_sat, smtcomp - like portfolio mode, with competition specific presets for schedule, etc.\n"
     "  -preprocess,axiom_selection,clausify,grounding: modes for producing output\n   for other solvers.\n"
-    "  -tpreprocess,tclausify: output modes for theory input"
+    "  -tpreprocess,tclausify: output modes for theory input\n"
     "  -output,profile: output information about the problem\n"
     "  -sat_solver: accepts problems in DIMACS and uses the internal sat solver\n   directly\n"
     "Some modes are not currently maintained:\n"
