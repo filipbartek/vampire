@@ -698,16 +698,15 @@ PrecedenceOrdering::PrecedenceOrdering(Problem& prb, const Options& opt)
       }
     }
 
-    /*cout << "% Function symbol names: ";
+    cout << "% Function symbol names: ";
     for(unsigned i=0;i<_functions;i++){
       if(i > 0){
         cout << ",";
       }
       cout << env.signature->functionName(i);
     }
-    cout << endl;*/
+    cout << endl;
 
-    /*
     cout << "% Function symbol index precedence permutation: ";
     for(unsigned i=0;i<_functions;i++){
       if(i > 0){
@@ -716,7 +715,6 @@ PrecedenceOrdering::PrecedenceOrdering(Problem& prb, const Options& opt)
       cout << aux[i];
     }
     cout << endl;
-    */
 
     for(unsigned i=0;i<_functions;i++) {
       _functionPrecedences[aux[i]]=i;
@@ -762,7 +760,7 @@ PrecedenceOrdering::PrecedenceOrdering(Problem& prb, const Options& opt)
         break;
     }
   }
-  /*
+
   cout << "% Predicate symbol names: ";
   for(unsigned i=0;i<_predicates;i++){
     if(i > 0){
@@ -771,8 +769,7 @@ PrecedenceOrdering::PrecedenceOrdering(Problem& prb, const Options& opt)
     cout << env.signature->predicateName(i);
   }
   cout << endl;
-  */
-  /*
+
   cout << "% Predicate symbol index precedence permutation: ";
   for(unsigned i=0;i<_predicates;i++){
     if(i > 0){
@@ -781,7 +778,6 @@ PrecedenceOrdering::PrecedenceOrdering(Problem& prb, const Options& opt)
     cout << aux[i];
   }
   cout << endl;
-  */
 
   for(unsigned i=0;i<_predicates;i++) {
     _predicatePrecedences[aux[i]]=i;
