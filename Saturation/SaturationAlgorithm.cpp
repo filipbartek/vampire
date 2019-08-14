@@ -1220,7 +1220,7 @@ MainLoopResult SaturationAlgorithm::runImpl()
   }
   catch(ThrowableBase&)
   {
-    env.statistics->saturationIterations = l;
+    env.statistics->saturationIterationsStarted = l + 1;
     tryUpdateFinalClauseCount();
     throw;
   }

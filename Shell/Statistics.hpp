@@ -213,8 +213,8 @@ public:
   unsigned finalActiveClauses;
   /** extensionality clauses at the end of the saturation algorithm run */
   unsigned finalExtensionalityClauses;
-  /** iterations of the main saturation loop */
-  unsigned saturationIterations;
+  /** initiated iterations of the main saturation loop */
+  unsigned saturationIterationsStarted;
 
   unsigned splitClauses;
   unsigned splitComponents;
