@@ -26,6 +26,7 @@
 #include <ostream>
 #include <fstream>
 #include <csignal>
+#include <memory>
 
 #if VZ3
 #include "z3++.h"
@@ -786,7 +787,7 @@ void clausifyMode(bool theory)
   {
     static const size_t bufferSize = 65536;
     char buffer[bufferSize];
-    FILE* fp = fopen(env.options->jsonOutput().c_str(), "wb");
+    unique_ptr<FILE, decltype(&fclose)> fp(fopen(env.options->jsonOutput().c_str(), "wb"), &fclose);
     if (!fp)
     {
       // https://stackoverflow.com/a/5987685/4054250
@@ -798,11 +799,10 @@ void clausifyMode(bool theory)
     }
     else
     {
-      json::FileWriteStream os(fp, buffer, bufferSize);
+      json::FileWriteStream os(fp.get(), buffer, bufferSize);
       BYPASSING_ALLOCATOR;
       json::Writer writer(os);
       writeProblem(writer, simplifier);
-      fclose(fp);
     }
   }
 
