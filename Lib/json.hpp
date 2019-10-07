@@ -7,7 +7,7 @@
 namespace json {
 
 using FileWriteStream = rapidjson::FileWriteStream;
-using Writer = rapidjson::PrettyWriter<FileWriteStream>;
+using Writer = rapidjson::Writer<FileWriteStream>;
 
 }
 
