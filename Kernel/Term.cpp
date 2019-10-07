@@ -408,21 +408,8 @@ void Term::write(json::Writer& writer) const
   }
   writer.Key("id");
   writer.Uint(functor());
-  writer.Key("name");
-  writer.String(name().c_str());
-  writer.Key("arity");
-  writer.Uint(arity());
-  writer.Key("ground");
-  writer.Bool(ground());
-  writer.Key("isShallow");
-  writer.Bool(isShallow());
-  writer.Key("commutative");
-  writer.Bool(commutative());
-  writer.Key("vars");
-  writer.Uint(vars());
+  // TODO: Consider adding properties: ground(), isShallow(), commutative(), vars()
   // TODO: Write incident functors and variables. See Term::freeVariables(), Term::getVariableIterator(), Term::getDistinctVars()
-  writer.Key("hash");
-  writer.Uint(hash());
   writer.Key("args");
   args()->write(writer);
   writer.EndObject();
@@ -619,12 +606,6 @@ void TermList::writeAsVar(json::Writer& writer) const
   writer.String("variable");
   writer.Key("id");
   writer.Uint(var());
-  writer.Key("name");
-  writer.String(Term::variableToString(*this).c_str());
-  writer.Key("ordinary");
-  writer.Bool(isOrdinaryVar());
-  writer.Key("special");
-  writer.Bool(isSpecialVar());
   writer.EndObject();
 }
 
@@ -692,12 +673,6 @@ void Literal::write(json::Writer& writer) const
   writer.StartObject();
   writer.Key("polarity");
   writer.Int(polarity());
-  writer.Key("isEquality");
-  writer.Bool(isEquality());
-  writer.Key("hash");
-  writer.Uint(hash());
-  writer.Key("oppositeHash");
-  writer.Uint(oppositeHash());
   writer.Key("term");
   Term::write(writer);
   writer.EndObject();

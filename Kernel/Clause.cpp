@@ -691,9 +691,8 @@ void Clause::write(json::Writer& writer) const
 {
   writer.StartObject();
   // Inspiration: TPTPPrinter::toString(const Unit* unit)
+  // Interpretation: Unit::inputTypeAsString()
   writer.Key("inputType");
-  writer.String(inputTypeAsString().c_str());
-  writer.Key("inputTypeId");
   writer.Int(inputType());
   // Inspiration: Clause::toTPTPString()
   writer.Key("literals");
