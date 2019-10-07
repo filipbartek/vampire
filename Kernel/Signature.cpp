@@ -226,6 +226,17 @@ void Signature::Symbol::write(json::Writer& writer, unsigned symNumber) const
   writer.EndObject();
 }
 
+void Signature::Symbol::writeCsvHeader(std::ostream& os)
+{
+  os << "isFunction,id,name,arity,usageCnt,unitUsageCnt,inGoal,inUnit,skolem,inductionSkolem\n";
+}
+
+void Kernel::Signature::Symbol::writeCsvRow(std::ostream& os, bool isFunction, unsigned int id) const
+{
+  // TODO: Write the sort between arity and usageCnt.
+  os << isFunction << "," << id << "," << name() << "," << arity() << "," << usageCnt() << "," << unitUsageCnt() << "," << inGoal() << "," << inUnit() << "," << skolem() << "," << inductionSkolem() << "\n";
+}
+
 /**
  * Create a Signature.
  * @since 07/05/2007 Manchester

@@ -693,51 +693,22 @@ void spiderMode()
   env.endOutput();
 } // spiderMode
 
-static void writeProblem(json::Writer& writer, CompositeISE& simplifier)
+static void writeClauses(json::Writer& writer, CompositeISE& simplifier)
 {
   // Inspiration: clausifyMode(bool theory)
-  writer.StartObject();
-  { // sig
-    // Inspiration: UIHelper::outputSymbolDeclarations(ostream& out)
-    const Signature& sig = *env.signature;
-    { // functions
-      writer.Key("functions");
-      writer.StartArray();
-      for (unsigned i=0; i<sig.functions(); ++i) {
-        const Signature::Symbol* const sym = env.signature->getFunction(i);
-        sym->write(writer, i);
-      }
-      writer.EndArray();
+  writer.StartArray();
+  const ScopedPtr<Problem> prb(getPreprocessedProblem());
+  ClauseIterator cit = prb->clauseIterator();
+  while (cit.hasNext()) {
+    Clause* cl = cit.next();
+    // TODO: Does this modify cl in place? Is it safe to do here?
+    cl = simplifier.simplify(cl);
+    if (!cl) {
+      continue;
     }
-    { // predicates
-      writer.Key("predicates");
-      writer.StartArray();
-      for (unsigned i=0; i<sig.predicates(); ++i) {
-        const Signature::Symbol* const sym = env.signature->getPredicate(i);
-        sym->write(writer, i);
-      }
-      writer.EndArray();
-    }
-    // TODO: Write a list of free variables in the clausified formula.
+    cl->write(writer);
   }
-  { // clauses
-    // Inspiration: clausifyMode(bool theory)
-    writer.Key("clauses");
-    writer.StartArray();
-    const ScopedPtr<Problem> prb(getPreprocessedProblem());
-    ClauseIterator cit = prb->clauseIterator();
-    while (cit.hasNext()) {
-      Clause* cl = cit.next();
-      // TODO: Does this modify cl in place? Is it safe to do here?
-      cl = simplifier.simplify(cl);
-      if (!cl) {
-        continue;
-      }
-      cl->write(writer);
-    }
-    writer.EndArray();
-  }
-  writer.EndObject();
+  writer.EndArray();
 }
 
 void clausifyMode(bool theory)
@@ -783,11 +754,27 @@ void clausifyMode(bool theory)
 
   if (env.options->latexOutput() != "off") { outputClausesToLaTeX(prb.ptr()); }
 
-  if (env.options->jsonOutput() != "off")
+  if (env.options->symbolsCsvOutput() != "off")
+  {
+    BYPASSING_ALLOCATOR;
+    ofstream os(env.options->symbolsCsvOutput().c_str());
+    Signature::Symbol::writeCsvHeader(os);
+    // Inspiration: UIHelper::outputSymbolDeclarations(ostream& out)
+    Signature& sig = *env.signature;
+    for (unsigned i=0; i<sig.predicates(); ++i) {
+      sig.getPredicate(i)->writeCsvRow(os, false, i);
+    }
+    for (unsigned i=0; i<sig.functions(); ++i) {
+      sig.getFunction(i)->writeCsvRow(os, true, i);
+    }
+    // TODO: Write a list of free variables in the clausified formula.
+  }
+
+  if (env.options->clausesJsonOutput() != "off")
   {
     static const size_t bufferSize = 65536;
     char buffer[bufferSize];
-    unique_ptr<FILE, decltype(&fclose)> fp(fopen(env.options->jsonOutput().c_str(), "wb"), &fclose);
+    unique_ptr<FILE, decltype(&fclose)> fp(fopen(env.options->clausesJsonOutput().c_str(), "wb"), &fclose);
     if (!fp)
     {
       // https://stackoverflow.com/a/5987685/4054250
@@ -802,7 +789,7 @@ void clausifyMode(bool theory)
       json::FileWriteStream os(fp.get(), buffer, bufferSize);
       BYPASSING_ALLOCATOR;
       json::Writer writer(os);
-      writeProblem(writer, simplifier);
+      writeClauses(writer, simplifier);
     }
   }
 
@@ -1136,4 +1123,5 @@ catch (Parse::TPTP::ParseErrorException& exception) {
 
   return vampireReturnValue;
 } // main
+
 

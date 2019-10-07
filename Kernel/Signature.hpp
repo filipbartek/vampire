@@ -220,6 +220,8 @@ class Signature
     OperatorType* predType() const;
 
     void write(json::Writer& writer, unsigned symNumber) const;
+    static void writeCsvHeader(std::ostream& os);
+    void writeCsvRow(std::ostream& os, bool isFunction, unsigned id) const;
 
     CLASS_NAME(Signature::Symbol);
     USE_ALLOCATOR(Symbol);

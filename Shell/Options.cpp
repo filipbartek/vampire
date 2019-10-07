@@ -585,11 +585,17 @@ void Options::Options::init()
     //_lookup.insert(&_xmlOutput);
     _xmlOutput.tag(OptionTag::OUTPUT);
 
-    _jsonOutput = StringOptionValue("json_output","","off");
-    _jsonOutput.description="File to put JSON output in. If 'off' is specified, JSON output is disabled. Only implemented in modes clausify and tclausify.";
-    _lookup.insert(&_jsonOutput);
-    _jsonOutput.tag(OptionTag::OUTPUT);
-    _jsonOutput.setExperimental();
+    _symbolsCsvOutput = StringOptionValue("symbols_csv_output","","off");
+    _symbolsCsvOutput.description="File to put symbols in. If 'off' is specified, output is disabled. Only implemented in modes clausify and tclausify.";
+    _lookup.insert(&_symbolsCsvOutput);
+    _symbolsCsvOutput.tag(OptionTag::OUTPUT);
+    _symbolsCsvOutput.setExperimental();
+
+    _clausesJsonOutput = StringOptionValue("clauses_json_output","","off");
+    _clausesJsonOutput.description="File to put clauses in. If 'off' is specified, output is disabled. Only implemented in modes clausify and tclausify.";
+    _lookup.insert(&_clausesJsonOutput);
+    _clausesJsonOutput.tag(OptionTag::OUTPUT);
+    _clausesJsonOutput.setExperimental();
 
     _latexOutput = StringOptionValue("latex_output","","off");
     _latexOutput.description="File that will contain proof in the LaTeX format.";
