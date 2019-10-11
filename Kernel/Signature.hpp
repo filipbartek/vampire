@@ -37,6 +37,7 @@
 #include "Lib/DHMap.hpp"
 #include "Lib/VString.hpp"
 #include "Lib/Environment.hpp"
+#include "Lib/SmartPtr.hpp"
 #include "Lib/json.hpp"
 
 #include "Shell/TermAlgebra.hpp"
@@ -473,12 +474,14 @@ class Signature
   unsigned getFunctionNumber(const vstring& name, unsigned arity) const;
   unsigned getPredicateNumber(const vstring& name, unsigned arity) const;
   
+  typedef SmartPtr<Stack<unsigned>> DistinctGroupMembers;
+
   Unit* getDistinctGroupPremise(unsigned group);
   unsigned createDistinctGroup(Unit* premise = 0);
   void addToDistinctGroup(unsigned constantSymbol, unsigned groupId);
   bool hasDistinctGroups(){ return _distinctGroupsAddedTo; }
   void noDistinctGroupsLeft(){ _distinctGroupsAddedTo=false; }
-  Stack<Stack<unsigned>*> getDistinctGroupMembers(){ return _distinctGroupMembers; }
+  Stack<DistinctGroupMembers> &distinctGroupMembers(){ return _distinctGroupMembers; }
 
   bool hasTermAlgebras() { return !_termAlgebras.isEmpty(); }
       
@@ -558,8 +561,9 @@ private:
   
   // Store the premise of a distinct group for proof printing, if 0 then group is input
   Stack<Unit*> _distinctGroupPremises;
+
   // We only store members up until a hard-coded limit i.e. the limit at which we will expand the group
-  Stack<Stack<unsigned>*> _distinctGroupMembers;
+  Stack<DistinctGroupMembers> _distinctGroupMembers;
   // Flag to indicate if any distinct groups have members
   bool _distinctGroupsAddedTo;
 

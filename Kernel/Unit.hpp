@@ -83,6 +83,8 @@ public:
   unsigned varCnt();
   unsigned getPriority() const;
 
+  unsigned getSineLevel() const;
+
   vstring inferenceAsString() const;
 
   /** True if a clause unit */

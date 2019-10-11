@@ -63,6 +63,7 @@ public:
   Statistics();
 
   void print(ostream& out);
+  void explainRefutationNotFound(ostream& out);
 
   // Input
   /** number of input clauses */
@@ -204,6 +205,7 @@ public:
   unsigned inferencesBlockedForOrderingAftercheck;
 
   bool smtReturnedUnknown;
+  bool smtDidNotEvaluate;
 
   unsigned inferencesSkippedDueToColors;
 
