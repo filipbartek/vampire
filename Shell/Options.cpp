@@ -1750,12 +1750,12 @@ void Options::Options::init()
     _symbolPrecedence.tag(OptionTag::SATURATION);
     _symbolPrecedence.setRandomChoices({"arity","occurence","reverse_arity","frequency"});
 
-    _functionPrecedence = StringOptionValue("function_precendence","fp","");
+    _functionPrecedence = StringOptionValue("function_precedence","fp","");
     _functionPrecedence.description = "A name of a file with an explicit user specified precedence on function symbols.";
     _functionPrecedence.setExperimental();
     _lookup.insert(&_functionPrecedence);
 
-    _predicatePrecedence = StringOptionValue("predicate_precendence","pp","");
+    _predicatePrecedence = StringOptionValue("predicate_precedence","pp","");
     _predicatePrecedence.description = "A name of a file with an explicit user specified precedence on predicate symbols.";
     _predicatePrecedence.setExperimental();
     _lookup.insert(&_predicatePrecedence);
