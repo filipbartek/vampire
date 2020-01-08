@@ -646,21 +646,22 @@ static void loadPermutationFromString(DArray<unsigned>& p, const vstring& str) {
 static bool loadPrecedenceFromFile(DArray<unsigned>& p, const vstring& fileName) {
   CALL("loadPrecedenceFromFile");
 
-  if (!fileName.empty()) {
-    BYPASSING_ALLOCATOR;
-
-    ifstream precedence_file (fileName.c_str());
-    if (!precedence_file.is_open()) {
-      USER_ERROR("Failed to open precedence file \"" + fileName + "\".");
-    }
-    vstring precedence;
-    if (!getline(precedence_file, precedence)) {
-      USER_ERROR("Failed to load precedence from file \"" + fileName + "\".");
-    }
-    loadPermutationFromString(p,precedence);
-    return true;
+  if (fileName.empty()) {
+    return false;
   }
-  return false;
+
+  BYPASSING_ALLOCATOR;
+
+  ifstream precedence_file (fileName.c_str());
+  if (!precedence_file.is_open()) {
+    USER_ERROR("Failed to open precedence file \"" + fileName + "\".");
+  }
+  vstring precedence;
+  if (!getline(precedence_file, precedence)) {
+    USER_ERROR("Failed to load precedence from file \"" + fileName + "\".");
+  }
+  loadPermutationFromString(p,precedence);
+  return true;
 }
 
 /**
