@@ -653,7 +653,6 @@ static bool loadPrecedenceFromFile(DArray<unsigned>& p, const vstring& fileName)
     ifstream precedence_file (fileName.c_str());
     if (precedence_file.is_open() && getline(precedence_file, precedence)) {
       loadPermutationFromString(p,precedence);
-      precedence_file.close();
       return true;
     }
   }
