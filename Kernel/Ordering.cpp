@@ -633,13 +633,16 @@ static void loadPermutationFromString(DArray<unsigned>& p, const vstring& str) {
       }
 
       if (val >= p.size()) {
-        break;
+        USER_ERROR("Invalid permutation element: " + Int::toString(val));
       }
 
       p[i++] = val;
 
       if (ss.peek() == ',')
           ss.ignore();
+  }
+  if (i < p.size()) {
+    USER_ERROR("The permutation is too short. Expected length: " + Int::toString(p.size()) + ". Expected length: " + Int::toString(i) + ".");
   }
 }
 
