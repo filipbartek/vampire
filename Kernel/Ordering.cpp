@@ -643,6 +643,23 @@ static void loadPermutationFromString(DArray<unsigned>& p, const vstring& str) {
   }
 }
 
+static bool loadPrecedenceFromFile(DArray<unsigned>& p, const vstring& fileName) {
+  CALL("loadPrecedenceFromFile");
+
+  if (!fileName.empty()) {
+    BYPASSING_ALLOCATOR;
+
+    vstring precedence;
+    ifstream precedence_file (fileName.c_str());
+    if (precedence_file.is_open() && getline(precedence_file, precedence)) {
+      loadPermutationFromString(p,precedence);
+      precedence_file.close();
+    }
+    return true;
+  }
+  return false;
+}
+
 /**
  * Create a PrecedenceOrdering object.
  */
@@ -660,16 +677,7 @@ PrecedenceOrdering::PrecedenceOrdering(Problem& prb, const Options& opt)
   if(_functions) {
     aux.initFromIterator(getRangeIterator(0u, _functions), _functions);
 
-    if (!opt.functionPrecedence().empty()) {
-      BYPASSING_ALLOCATOR;
-
-      vstring precedence;
-      ifstream precedence_file (opt.functionPrecedence().c_str());
-      if (precedence_file.is_open() && getline(precedence_file, precedence)) {
-        loadPermutationFromString(aux,precedence);
-        precedence_file.close();
-      }
-    } else {
+    if (!loadPrecedenceFromFile(aux, opt.functionPrecedence())) {
       switch(opt.symbolPrecedence()) {
       case Shell::Options::SymbolPrecedence::ARITY:
         aux.sort(FnBoostWrapper<FnArityComparator>(FnArityComparator()));
@@ -723,16 +731,7 @@ PrecedenceOrdering::PrecedenceOrdering(Problem& prb, const Options& opt)
 
   aux.initFromIterator(getRangeIterator(0u, _predicates), _predicates);
 
-  if (!opt.predicatePrecedence().empty()) {
-    BYPASSING_ALLOCATOR;
-
-    vstring precedence;
-    ifstream precedence_file (opt.predicatePrecedence().c_str());
-    if (precedence_file.is_open() && getline(precedence_file, precedence)) {
-      loadPermutationFromString(aux,precedence);
-      precedence_file.close();
-    }
-  } else {
+  if (!loadPrecedenceFromFile(aux, opt.predicatePrecedence())) {
     switch(opt.symbolPrecedence()) {
     case Shell::Options::SymbolPrecedence::ARITY:
       aux.sort(PredBoostWrapper<PredArityComparator>(PredArityComparator()));
