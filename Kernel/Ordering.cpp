@@ -649,12 +649,16 @@ static bool loadPrecedenceFromFile(DArray<unsigned>& p, const vstring& fileName)
   if (!fileName.empty()) {
     BYPASSING_ALLOCATOR;
 
-    vstring precedence;
     ifstream precedence_file (fileName.c_str());
-    if (precedence_file.is_open() && getline(precedence_file, precedence)) {
-      loadPermutationFromString(p,precedence);
-      return true;
+    if (!precedence_file.is_open()) {
+      USER_ERROR("Failed to open precedence file \"" + fileName + "\".");
     }
+    vstring precedence;
+    if (!getline(precedence_file, precedence)) {
+      USER_ERROR("Failed to load precedence from file \"" + fileName + "\".");
+    }
+    loadPermutationFromString(p,precedence);
+    return true;
   }
   return false;
 }
