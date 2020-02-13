@@ -44,7 +44,7 @@ MINISAT_FLAGS = $(MINISAT_DBG_FLAGS)
 
 #XFLAGS = -g -DVDEBUG=1 -DVTEST=1 -DCHECK_LEAKS=1 # full debugging + testing
 #XFLAGS = $(DBG_FLAGS)
-XFLAGS = -Wfatal-errors -g -DVDEBUG=1 -DCHECK_LEAKS=0 -DGNUMP=$(GNUMPF)# standard debugging only
+XFLAGS = -Wfatal-errors -g -DVDEBUG=1 -DCHECK_LEAKS=0 -DUSE_SYSTEM_ALLOCATION=1 -DGNUMP=$(GNUMPF)# standard debugging only
 #XFLAGS = -g -DVDEBUG=1 -DCHECK_LEAKS=0 -DUSE_SYSTEM_ALLOCATION=1 -DVALGRIND=1 -DGNUMP=$(GNUMPF)# memory leaks
 #XFLAGS = $(REL_FLAGS)
 
@@ -87,7 +87,7 @@ Z3LIB=
 ifeq (,$(shell echo $(MAKECMDGOALS) | sed 's/.*z3.*//g')) 
 INCLUDES= -I. -Iz3/api -Iz3/api/c++ 
 ifeq (,$(shell echo $(MAKECMDGOALS) | sed 's/.*static.*//g'))
-Z3LIB= -Linclude -lz3 -lgomp -pthread -lrt -ldl
+Z3LIB= -Linclude -lz3 -lgomp -pthread  -Wl,--whole-archive -lrt -lpthread -Wl,--no-whole-archive -ldl
 else
 Z3LIB= -Linclude -lz3
 endif
@@ -326,7 +326,8 @@ VST_OBJ= Saturation/AWPassiveClauseContainer.o\
          Saturation/ProvingHelper.o\
          Saturation/SaturationAlgorithm.o\
          Saturation/Splitter.o\
-         Saturation/SymElOutput.o
+         Saturation/SymElOutput.o\
+         Saturation/ManCSPassiveClauseContainer.o\
 
 VS_OBJ = Shell/AnswerExtractor.o\
          Shell/BFNT.o\
@@ -387,7 +388,6 @@ VS_OBJ = Shell/AnswerExtractor.o\
 #         Shell/SMTLEX.o\
 #         Shell/SMTPAR.o\
 #         Shell/CParser.o\
-#         Shell/AxiomGenerator.o\
 #         Shell/EqualityAxiomatizer.o\
 #         Shell/GlobalOptions.o\
 #         Shell/Lexer.o\

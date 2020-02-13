@@ -250,6 +250,11 @@ public:
     ALL
   };
 
+  enum class PredicateSineLevels : unsigned int {
+    NO,   // no means 1) the reverse of "on", 2) use with caution, it is predicted to be the worse value
+    OFF,
+    ON
+  };
 
  
   enum class InductionChoice : unsigned int {
@@ -595,6 +600,10 @@ public:
     GOAL = 1,
     UNIT = 2,
     GOAL_UNIT = 3
+  };
+  enum class IntroducedSymbolPrecedence : unsigned int {
+    TOP = 0,
+    BOTTOM = 1
   };
 
   enum class SineSelection : unsigned int {
@@ -1880,6 +1889,7 @@ public:
   bool showDefinitions() const { return showAll() || _showDefinitions.actualValue; }
   bool showNew() const { return showAll() || _showNew.actualValue; }
   bool sineToAge() const { return _sineToAge.actualValue; }
+  PredicateSineLevels sineToPredLevels() const { return _sineToPredLevels.actualValue; }
   bool showSplitting() const { return showAll() || _showSplitting.actualValue; }
   bool showNewPropositional() const { return showAll() || _showNewPropositional.actualValue; }
   bool showPassive() const { return showAll() || _showPassive.actualValue; }
@@ -1890,6 +1900,7 @@ public:
   bool showTheoryAxioms() const { return showAll() || _showTheoryAxioms.actualValue; }
   bool showFOOL() const { return showAll() || _showFOOL.actualValue; }
   bool showFMBsortInfo() const { return showAll() || _showFMBsortInfo.actualValue; }
+  bool showInduction() const { return showAll() || _showInduction.actualValue; }
 #if VZ3
   bool showZ3() const { return showAll() || _showZ3.actualValue; }
 #endif
@@ -1960,6 +1971,7 @@ public:
   TermOrdering termOrdering() const { return _termOrdering.actualValue; }
   SymbolPrecedence symbolPrecedence() const { return _symbolPrecedence.actualValue; }
   SymbolPrecedenceBoost symbolPrecedenceBoost() const { return _symbolPrecedenceBoost.actualValue; }
+  IntroducedSymbolPrecedence introducedSymbolPrecedence() const { return _introducedSymbolPrecedence.actualValue; }
   const vstring& functionPrecedence() const { return _functionPrecedence.actualValue; }
   const vstring& predicatePrecedence() const { return _predicatePrecedence.actualValue; }
   // Return time limit in deciseconds, or 0 if there is no time limit
@@ -2121,6 +2133,9 @@ public:
   bool newCNF() const { return _newCNF.actualValue; }
   int getIteInliningThreshold() const { return _iteInliningThreshold.actualValue; }
   bool getIteInlineLet() const { return _inlineLet.actualValue; }
+
+  bool useManualClauseSelection() const { return _manualClauseSelection.actualValue; }
+
 private:
     
     /**
@@ -2408,6 +2423,7 @@ private:
   ChoiceOptionValue<InterpolantMode> _showInterpolant;
   BoolOptionValue _showNew;
   BoolOptionValue _sineToAge;
+  ChoiceOptionValue<PredicateSineLevels> _sineToPredLevels;
   BoolOptionValue _showSplitting;
   BoolOptionValue _showNewPropositional;
   BoolOptionValue _showNonconstantSkolemFunctionTrace;
@@ -2424,6 +2440,7 @@ private:
   BoolOptionValue _showTheoryAxioms;
   BoolOptionValue _showFOOL;
   BoolOptionValue _showFMBsortInfo;
+  BoolOptionValue _showInduction;
 #if VZ3
   BoolOptionValue _showZ3;
   BoolOptionValue _z3UnsatCores;
@@ -2465,6 +2482,7 @@ private:
   ChoiceOptionValue<TermOrdering> _termOrdering;
   ChoiceOptionValue<SymbolPrecedence> _symbolPrecedence;
   ChoiceOptionValue<SymbolPrecedenceBoost> _symbolPrecedenceBoost;
+  ChoiceOptionValue<IntroducedSymbolPrecedence> _introducedSymbolPrecedence;
   StringOptionValue _functionPrecedence;
   StringOptionValue _predicatePrecedence;
 
@@ -2503,6 +2521,8 @@ private:
   BoolOptionValue _newCNF;
   IntOptionValue _iteInliningThreshold;
   BoolOptionValue _inlineLet;
+
+  BoolOptionValue _manualClauseSelection;
 
 
 }; // class Options

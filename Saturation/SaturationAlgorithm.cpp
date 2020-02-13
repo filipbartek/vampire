@@ -85,6 +85,7 @@
 #include "Splitter.hpp"
 #include "SymElOutput.hpp"
 #include "SaturationAlgorithm.hpp"
+#include "ManCSPassiveClauseContainer.hpp"
 #include "AWPassiveClauseContainer.hpp"
 #include "Discount.hpp"
 #include "LRS.hpp"
@@ -139,7 +140,15 @@ SaturationAlgorithm::SaturationAlgorithm(Problem& prb, const Options& opt)
   _completeOptionSettings = opt.complete(prb);
 
   _unprocessed = new UnprocessedClauseContainer();
-  _passive = new AWPassiveClauseContainer(opt);
+  if (opt.useManualClauseSelection())
+  {
+    _passive = new ManCSPassiveClauseContainer(opt);
+  }
+  else
+  {
+    _passive = new AWPassiveClauseContainer(opt);
+  }
+    
   _active = new ActiveClauseContainer(opt);
 
   _active->attach(this);
@@ -558,7 +567,6 @@ void SaturationAlgorithm::addInputClause(Clause* cl)
   bool sosForAxioms = _opt.sos() == Options::Sos::ON || _opt.sos() == Options::Sos::ALL; 
   sosForAxioms = sosForAxioms && cl->inputType()==Clause::AXIOM;
 
-  bool isTheory = cl->inference()->rule()==Inference::THEORY;
   bool sosForTheory = _opt.sos() == Options::Sos::THEORY && _opt.sosTheoryLimit() == 0;
 
   if (_opt.sineToAge()) {
@@ -572,7 +580,7 @@ void SaturationAlgorithm::addInputClause(Clause* cl)
     cl->setAge(level);
   }
 
-  if (sosForAxioms || (isTheory && sosForTheory)){
+  if (sosForAxioms || (cl->isTheoryAxiom() && sosForTheory)){
     addInputSOSClause(cl);
   } else {
     addNewClause(cl);
@@ -834,6 +842,9 @@ void SaturationAlgorithm::handleEmptyClause(Clause* cl)
       reportSpiderFail();
       // this is a poor way of handling this in release mode but it prevents unsound proofs
       throw MainLoop::MainLoopFinishedException(Statistics::REFUTATION_NOT_FOUND);
+    }
+    if(cl->inputType() == Unit::AXIOM){
+      UIHelper::setConjectureInProof(false);
     }
 
     throw RefutationFoundException(cl);
