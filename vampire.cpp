@@ -723,6 +723,8 @@ void clausifyMode(bool theory)
   simplifier.addFront(new DuplicateLiteralRemovalISE());
 
   ScopedPtr<Problem> prb(getPreprocessedProblem());
+  // Refresh properties, namely to set correct usage counts of introduced symbols.
+  prb->getProperty();
 
   env.beginOutput();
   UIHelper::outputSortDeclarations(env.out());
