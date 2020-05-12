@@ -235,6 +235,7 @@ void Signature::Symbol::writeCsvHeader(std::ostream& os)
 void Kernel::Signature::Symbol::writeCsvRow(std::ostream& os, bool isFunction, unsigned int id) const
 {
   // TODO: Write the sort between arity and usageCnt.
+  // TODO: Consider adding more symbol properties.
   os << isFunction << "," << id << "," << name() << "," << arity() << "," << usageCnt() << "," << unitUsageCnt() << "," << inGoal() << "," << inUnit() << "," << skolem() << "," << inductionSkolem() << "," << introduced() << "\n";
 }
 
