@@ -229,14 +229,16 @@ void Signature::Symbol::write(json::Writer& writer, unsigned symNumber) const
 
 void Signature::Symbol::writeCsvHeader(std::ostream& os)
 {
-  os << "isFunction,id,name,arity,usageCnt,unitUsageCnt,inGoal,inUnit,skolem,inductionSkolem,introduced\n";
+  os << "isFunction,id,name,arity,usageCnt,unitUsageCnt,inGoal,inUnit,skolem,inductionSkolem,interpreted,introduced,stringConstant,numericConstant,interpretedNumber\n";
 }
 
 void Kernel::Signature::Symbol::writeCsvRow(std::ostream& os, bool isFunction, unsigned int id) const
 {
   // TODO: Write the sort between arity and usageCnt.
   // TODO: Consider adding more symbol properties.
-  os << isFunction << "," << id << "," << name() << "," << arity() << "," << usageCnt() << "," << unitUsageCnt() << "," << inGoal() << "," << inUnit() << "," << skolem() << "," << inductionSkolem() << "," << introduced() << "\n";
+  os << isFunction << "," << id << "," << name() << "," << arity() << "," << usageCnt() << "," << unitUsageCnt() << "," << inGoal()
+   << "," << inUnit() << "," << skolem() << "," << inductionSkolem()
+   << "," << interpreted() << "," << introduced() << "," << stringConstant() << "," << numericConstant() << "," << interpretedNumber() << "\n";
 }
 
 /**
