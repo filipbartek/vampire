@@ -673,7 +673,7 @@ void Literal::write(json::Writer& writer) const
   writer.StartObject();
   writer.Key("polarity");
   writer.Int(polarity());
-  writer.Key("term");
+  writer.Key("atom");
   Term::write(writer);
   writer.EndObject();
 }
