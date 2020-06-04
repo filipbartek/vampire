@@ -201,31 +201,6 @@ OperatorType* Signature::Symbol::predType() const
   return _type;
 }
 
-void Signature::Symbol::write(json::Writer& writer, unsigned symNumber) const
-{
-  // Inspiration: UIHelper::outputSymbolTypeDeclarationIfNeeded(ostream& out, bool function, unsigned symNumber)
-  writer.StartObject();
-  writer.Key("id");
-  writer.Uint(symNumber);
-  writer.Key("name");
-  writer.String(name().c_str());
-  writer.Key("arity");
-  writer.Uint(arity());
-  // TODO: Write the sort.
-  writer.Key("usageCnt");
-  writer.Uint(usageCnt());
-  writer.Key("unitUsageCnt");
-  writer.Uint(unitUsageCnt());
-  writer.Key("inGoal");
-  writer.Bool(inGoal());
-  writer.Key("inUnit");
-  writer.Bool(inUnit());
-  writer.Key("skolem");
-  writer.Bool(skolem());
-  writer.Key("inductionSkolem");
-  writer.Bool(inductionSkolem());
-  writer.EndObject();
-}
 
 void Signature::Symbol::writeCsvHeader(std::ostream& os)
 {

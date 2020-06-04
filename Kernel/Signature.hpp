@@ -38,7 +38,6 @@
 #include "Lib/VString.hpp"
 #include "Lib/Environment.hpp"
 #include "Lib/SmartPtr.hpp"
-#include "Lib/json.hpp"
 
 #include "Shell/TermAlgebra.hpp"
 #include "Shell/Options.hpp"
@@ -220,7 +219,6 @@ class Signature
     OperatorType* fnType() const;
     OperatorType* predType() const;
 
-    void write(json::Writer& writer, unsigned symNumber) const;
     static void writeCsvHeader(std::ostream& os);
     void writeCsvRow(std::ostream& os, bool isFunction, unsigned id) const;
 
