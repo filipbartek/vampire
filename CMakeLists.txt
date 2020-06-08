@@ -132,6 +132,7 @@ set(VAMPIRE_LIB_SOURCES
     Lib/Int.cpp
     Lib/IntNameTable.cpp
     Lib/IntUnionFind.cpp
+    Lib/JsonWriter.cpp
     Lib/MemoryLeak.cpp
     Lib/MultiCounter.cpp
     Lib/NameArray.cpp
@@ -174,6 +175,7 @@ set(VAMPIRE_LIB_SOURCES
     Lib/IntUnionFind.hpp
     Lib/InverseLookup.hpp
     Lib/json.hpp
+    Lib/JsonWriter.hpp
     Lib/LastCopyWatcher.hpp
     Lib/List.hpp
     Lib/Map.hpp

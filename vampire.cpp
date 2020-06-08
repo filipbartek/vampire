@@ -48,7 +48,7 @@
 #include "Lib/Vector.hpp"
 #include "Lib/System.hpp"
 #include "Lib/Metaiterators.hpp"
-#include "Lib/json.hpp"
+#include "Lib/JsonWriter.hpp"
 
 #include "Lib/RCPtr.hpp"
 
@@ -695,24 +695,6 @@ void spiderMode()
   env.endOutput();
 } // spiderMode
 
-static void writeClauses(json::Writer& writer, CompositeISE& simplifier)
-{
-  // Inspiration: clausifyMode(bool theory)
-  writer.StartArray();
-  const ScopedPtr<Problem> prb(getPreprocessedProblem());
-  ClauseIterator cit = prb->clauseIterator();
-  while (cit.hasNext()) {
-    Clause* cl = cit.next();
-    // TODO: Does this modify cl in place? Is it safe to do here?
-    cl = simplifier.simplify(cl);
-    if (!cl) {
-      continue;
-    }
-    cl->write(writer);
-  }
-  writer.EndArray();
-}
-
 void clausifyMode(bool theory)
 {
   CALL("clausifyMode()");
@@ -730,6 +712,13 @@ void clausifyMode(bool theory)
   UIHelper::outputSortDeclarations(env.out());
   UIHelper::outputSymbolDeclarations(env.out());
 
+  BYPASSING_ALLOCATOR;
+  unique_ptr<JsonWriter> jsonWriter;
+  if (env.options->clausesJsonOutput() != "off")
+  {
+    jsonWriter.reset(new JsonArrayWriter(env.options->clausesJsonOutput().c_str()));
+  }
+
   ClauseIterator cit = prb->clauseIterator();
   bool printed_conjecture = false;
   while (cit.hasNext()) {
@@ -745,6 +734,9 @@ void clausifyMode(bool theory)
       env.out() << TPTPPrinter::toString(fu) << "\n";
     } else {
       env.out() << TPTPPrinter::toString(cl) << "\n";
+    }
+    if (jsonWriter) {
+      cl->write(*jsonWriter->writer);
     }
   }
   if(!printed_conjecture && UIHelper::haveConjecture()){
@@ -772,29 +764,6 @@ void clausifyMode(bool theory)
       sig.getFunction(i)->writeCsvRow(os, true, i);
     }
     // TODO: Write a list of free variables in the clausified formula.
-  }
-
-  if (env.options->clausesJsonOutput() != "off")
-  {
-    static const size_t bufferSize = 65536;
-    char buffer[bufferSize];
-    unique_ptr<FILE, decltype(&fclose)> fp(fopen(env.options->clausesJsonOutput().c_str(), "wb"), &fclose);
-    if (!fp)
-    {
-      // https://stackoverflow.com/a/5987685/4054250
-      // https://stackoverflow.com/a/5138903/4054250
-      ostringstream oss;
-      BYPASSING_ALLOCATOR;
-      oss << "JSON output error: " << strerror(errno);
-      throw ios_base::failure(oss.str());
-    }
-    else
-    {
-      json::FileWriteStream os(fp.get(), buffer, bufferSize);
-      BYPASSING_ALLOCATOR;
-      json::Writer writer(os);
-      writeClauses(writer, simplifier);
-    }
   }
 
   //we have successfully output all clauses, so we'll terminate with zero return value
