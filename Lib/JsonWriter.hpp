@@ -12,7 +12,7 @@ class JsonWriter {
 public:
   BYPASSING_ALLOCATOR;
 
-  unique_ptr<json::Writer> writer;
+  std::unique_ptr<json::Writer> writer;
 
   JsonWriter(const char *filename) : fp(nullptr, &fclose) {
     init(filename);
@@ -23,10 +23,10 @@ public:
   void init(const char *filename);
 
 private:
-  unique_ptr<FILE, decltype(&fclose)> fp;
+  std::unique_ptr<FILE, decltype(&fclose)> fp;
   static const size_t bufferSize = 65536;
   char buffer[bufferSize];
-  unique_ptr<json::FileWriteStream> os;
+  std::unique_ptr<json::FileWriteStream> os;
 };
 
 class JsonArrayWriter : public JsonWriter {
