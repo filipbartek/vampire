@@ -50,6 +50,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 # add top level directory to the search path of compiler
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+# add RapidJSON include directory to the search path of compiler
+include_directories(SYSTEM rapidjson/include)
+
 # Set the output folder where the binary will be created (i.e. build/dir)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
@@ -170,6 +173,7 @@ set(VAMPIRE_LIB_SOURCES
     Lib/IntNameTable.hpp
     Lib/IntUnionFind.hpp
     Lib/InverseLookup.hpp
+    Lib/json.hpp
     Lib/LastCopyWatcher.hpp
     Lib/List.hpp
     Lib/Map.hpp
